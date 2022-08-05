@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="daram.in" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="daram.in">
+        <serverdata>
+          <mappings>
+            <mapping local="C:/Program Files/dotnet/sdk/6.0.301/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_6_default.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot.sln" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/.dockerignore" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/Dockerfile" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/Program.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/dicebot.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/obj/Debug/net6.0/dicebot.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/obj/Debug/net6.0/dicebot.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/dicebot/obj/Debug/net6.0/dicebot.GlobalUsings.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ba26aa62-5cb5-4e0d-be1b-797e3879c0fe" name="daram.in">
+        <fileTransfer rootFolder="/Users/daramkun/Bots/dicebot" accessType="SFTP" host="192.168.0.5" port="22" sshConfigId="b167c648-18b6-42aa-81cd-ded67faad0b5" sshConfig="daramkun@192.168.0.5:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
