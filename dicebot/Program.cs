@@ -11,30 +11,15 @@ var socketClient = new DiscordSocketClient(new DiscordSocketConfig
     GatewayIntents = GatewayIntents.AllUnprivileged,
 });
 
-socketClient.Ready += async () =>
+var commands = new Dictionary<SlashCommandProperties, Func<SocketSlashCommand, Task>>
 {
-    await socketClient.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
-        .WithName("주사위")
-        .WithDescription("주사위를 굴립니다.")
-        .AddOption("눈수", ApplicationCommandOptionType.Integer, "눈의 수를 입력합니다. 입력하지 않으면 기본값 6.")
-        .Build()
-    );
-    await socketClient.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
-        .WithName("동전")
-        .WithDescription("동전을 던집니다.")
-        .Build()
-    );
-    // await socketClient.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
-    //     .WithName("상태")
-    //     .WithDescription("회피/살짝스침/스침/적중 중 하나를 고릅니다.")
-    //     .Build()
-    // );
-};
-socketClient.SlashCommandExecuted += async command =>
-{
-    switch (command.Data.Name)
     {
-        case "주사위":
+        new SlashCommandBuilder()
+            .WithName("주사위")
+            .WithDescription("주사위를 굴립니다.")
+            .AddOption("눈수", ApplicationCommandOptionType.Integer, "눈의 수를 입력합니다. 입력하지 않으면 기본값 6.")
+            .Build(),
+        async command =>
         {
             var option = command.Data.Options.FirstOrDefault(option => option.Name == "눈수");
             var maxValue = 6;
@@ -43,41 +28,35 @@ socketClient.SlashCommandExecuted += async command =>
 
             var value = commonRandom.Next(1, maxValue);
             await command.RespondAsync(text: $"주사위를 굴려서 {value}가 나왔습니다!");
-            break;
         }
-        
-        case "동전":
+    },
+    {
+        new SlashCommandBuilder()
+            .WithName("동전")
+            .WithDescription("동전을 던집니다.")
+            .Build(),
+        async command =>
         {
             var value = commonRandom.Next(0, 2);
-            await command.RespondAsync(text: $"동전을 굴려서 {(value switch { 0 => "앞", 1 => "뒷", _ => "?" })}면이 나왔습니다!");
-            break;
+            await command.RespondAsync(text: $"동전을 굴려서 {value switch { 0 => "앞", 1 => "뒷", _ => "?" }}면이 나왔습니다!");
         }
-        
-        // case "상태":
-        // {
-        //     var value = commonRandom.Next(0, 10);
-        //     var result = value switch
-        //     {
-        //         0 => "회피",
-        //         1 => "살짝 스침",
-        //         2 => "살짝 스침",
-        //         3 => "스침",
-        //         4 => "스침",
-        //         5 => "스침",
-        //         6 => "적중",
-        //         7 => "적중",
-        //         8 => "적중",
-        //         9 => "적중",
-        //         _ => "?"
-        //     };
-        //     await command.RespondAsync(text: $"💁 {result}");
-        //     break;
-        // }
-        
-        default:
-            await command.RespondAsync(text: "알 수 없는 명령입니다.");
-            break;
-    }
+    },
+};
+
+socketClient.Ready += async () =>
+{
+    await socketClient.Rest.DeleteAllGlobalCommandsAsync();
+    
+    var commandTasks = commands.Keys.Select(command => socketClient.CreateGlobalApplicationCommandAsync(command)).ToArray();
+    await Task.WhenAll(commandTasks);
+};
+socketClient.SlashCommandExecuted += async command =>
+{
+    var found = commands.FirstOrDefault(c => c.Key.Name.GetValueOrDefault() == command.Data.Name);
+    if (found.Value != null)
+        await found.Value.Invoke(command);
+    else
+        await command.RespondAsync(text: "알 수 없는 명령입니다.");
 };
 
 var discordToken = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
