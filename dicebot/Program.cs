@@ -43,15 +43,27 @@ var commands = new Dictionary<SlashCommandProperties, Func<SocketSlashCommand, T
     },
 };
 
+socketClient.LoggedIn += async () =>
+{
+    await Console.Out.WriteLineAsync("Discord Client is logged in.");
+};
+socketClient.LoggedOut += async () =>
+{
+    await Console.Out.WriteLineAsync("Discord Client is logged out.");
+};
 socketClient.Ready += async () =>
 {
+    await Console.Out.WriteLineAsync("Discord Client is ready.");
     await socketClient.Rest.DeleteAllGlobalCommandsAsync();
+    await Console.Out.WriteLineAsync("Deleted all global commands.");
     
     var commandTasks = commands.Keys.Select(command => socketClient.CreateGlobalApplicationCommandAsync(command)).ToArray();
     await Task.WhenAll(commandTasks);
+    await Console.Out.WriteLineAsync("Commands are registered.");
 };
 socketClient.SlashCommandExecuted += async command =>
 {
+    await Console.Out.WriteLineAsync("Slash command is executed.");
     var found = commands.FirstOrDefault(c => c.Key.Name.GetValueOrDefault() == command.Data.Name);
     if (found.Value != null)
         await found.Value.Invoke(command);
@@ -60,7 +72,7 @@ socketClient.SlashCommandExecuted += async command =>
 };
 
 var discordToken = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
-socketClient.LoginAsync(TokenType.Bot, discordToken).GetAwaiter().GetResult();
-socketClient.StartAsync().GetAwaiter().GetResult();
+await socketClient.LoginAsync(TokenType.Bot, discordToken);
+await socketClient.StartAsync();
 
 Thread.Sleep(Timeout.InfiniteTimeSpan);
