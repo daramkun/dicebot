@@ -1,0 +1,9 @@
+﻿<linker>
+    <assembly fullname="Discord.Net" preserve="all" />
+    <assembly fullname="Discord.Net.Core" preserve="all" />
+    <assembly fullname="Discord.Net.Commands" preserve="all" />
+    <assembly fullname="Discord.Net.Interactions" preserve="all" />
+    <assembly fullname="Discord.Net.Rest" preserve="all" />
+    <assembly fullname="Discord.Net.Webhook" preserve="all" />
+    <assembly fullname="Discord.Net.WebSocket" preserve="all" />
+</linker>
