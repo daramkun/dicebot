@@ -41,6 +41,23 @@ var commands = new Dictionary<SlashCommandProperties, Func<SocketSlashCommand, T
             await command.RespondAsync(text: $"동전을 굴려서 {value switch { 0 => "앞", 1 => "뒷", _ => "?" }}면이 나왔습니다!");
         }
     },
+    {
+        new SlashCommandBuilder()
+            .WithName("확률")
+            .WithDescription("확률에 따라 당첨 및 낙첨 여부를 결정합니다.")
+            .AddOption("확률", ApplicationCommandOptionType.Integer, "1~100 사이로 확률을 입력합니다. 입력하지 않으면 기본값 50.")
+            .Build(),
+        async command =>
+        {
+            var option = command.Data.Options.FirstOrDefault(option => option.Name == "확률");
+            var probability = 50;
+            if (option != null)
+                probability = (int) (long) option.Value;
+
+            var value = commonRandom.Next(0, 100);
+            await command.RespondAsync(text: $"{probability}%의 확률로 {(value <= probability ? "당첨!" : "낙첨!")}");
+        }
+    }
 };
 
 socketClient.LoggedIn += async () =>
